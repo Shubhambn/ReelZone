@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 const MONGO_URL=process.env.MONGO_URL!
 
 if (!MONGO_URL){
-    throw new Error("Eneter Mongo Url")
+    throw new Error("Missing MONGO_URL in environment variables.");
 }
 
 let cached = global.mongoose
@@ -35,7 +35,7 @@ export async function ConnectionwithDatabase() {
         throw error
 
     }
-    return cached
+    return cached.conn
     }
 
 
