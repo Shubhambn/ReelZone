@@ -20,7 +20,7 @@ const UploadExample = () => {
 
   const authenticator = async () => {
     try {
-      const response = await fetch("/api/auth/imagekit-auth");
+      const response = await fetch("/api/imagekit-auth");
       const data = await response.json();
 
       if (!response.ok) {
