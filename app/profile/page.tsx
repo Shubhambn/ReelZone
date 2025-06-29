@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import VideoCard from "@/component/VideoCard";
 import { IVideo } from "@/models/Video";
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -28,11 +29,13 @@ export default function ProfilePage() {
       {/* 🔷 Profile Header */}
       <div className="flex items-center justify-between bg-base-100 p-6 rounded-xl shadow-md border border-base-200">
         <div className="flex items-center gap-4">
-          <img
-            src={session.user?.image ?? "/view-3d-cool-modern-bird.jpg"}
-            alt="avatar"
-            className="w-24 h-24 rounded-full border-4 border-primary object-cover shadow"
-          />
+        <Image
+        src={session.user?.image ?? "/view-3d-cool-modern-bird.jpg"}
+        alt="avatar"
+        width={96} 
+        height={96}
+        className="rounded-full border-4 border-primary object-cover shadow"
+        />
           <div>
             <h2 className="text-2xl font-bold text-primary">{session.user?.name}</h2>
             <p className="text-sm text-gray-500">@{session.user?.email?.split("@")[0]}</p>

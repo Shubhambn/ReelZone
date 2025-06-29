@@ -13,7 +13,7 @@ export async function GET(){
         }
         return NextResponse.json(video)
     }
-    catch(error){
+    catch{
         return NextResponse.json(
             {error:"failed to featch video"},
             {status:500}
@@ -58,7 +58,7 @@ export async function POST(request:NextRequest) {
         
 
     }
-    catch(error){
+    catch{
         return NextResponse.json(
             {error:"failed to create video"},
             {status:400}
