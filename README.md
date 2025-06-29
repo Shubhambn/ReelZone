@@ -4,9 +4,10 @@ ReelZone is a modern video-sharing platform built with the latest technologies i
 
 ## 🚀 Live Demo
 
-[🔗 [https://your-netlify-site.netlify.app](https://crazyreelzone.netlify.app/)]  
+[🔗 Visit ReelZone (Live)](https://crazyreelzone.netlify.app)
 
----
+...
+
 
 ## 📌 Features
 
