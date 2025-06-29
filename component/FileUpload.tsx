@@ -1,5 +1,5 @@
 "use client";
-
+import React, { FC, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import {
   ImageKitAbortError,
@@ -8,9 +8,12 @@ import {
   ImageKitUploadNetworkError,
   upload,
 } from "@imagekit/next";
-import { useRef, useState } from "react";
 
-const UploadExample = () => {
+interface FileUploadProps {
+  label: string;
+  onUploadComplete: (url: string) => void;
+}
+const FileUpload: FC<FileUploadProps> = ({ label, onUploadComplete }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [progress, setProgress] = useState(0);
@@ -19,20 +22,15 @@ const UploadExample = () => {
   const [success, setSuccess] = useState<string | null>(null);
 
   const authenticator = async () => {
-    try {
-      const response = await fetch("/api/imagekit-auth");
-      const data = await response.json();
+    const response = await fetch("/api/imagekit-auth");
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(`Auth failed: ${JSON.stringify(data)}`);
-      }
-
-      const { signature, expire, token, publicKey } = data;
-      return { signature, expire, token, publicKey };
-    } catch (error) {
-      console.error("Auth error:", error);
-      throw new Error("Authentication request failed");
+    if (!response.ok) {
+      throw new Error(`Auth failed: ${JSON.stringify(data)}`);
     }
+
+    const { signature, expire, token, publicKey } = data;
+    return { signature, expire, token, publicKey };
   };
 
   const handleUpload = async () => {
@@ -48,20 +46,8 @@ const UploadExample = () => {
     }
 
     const file = fileInput.files[0];
-
-    let authParams;
     try {
-      authParams = await authenticator();
-    } catch (authError) {
-      console.error("Auth failed:", authError);
-      setError("Could not authenticate upload. Try again.");
-      setIsUploading(false);
-      return;
-    }
-
-    const { signature, expire, token, publicKey } = authParams;
-
-    try {
+      const { signature, expire, token, publicKey } = await authenticator();
       abortControllerRef.current = new AbortController();
 
       const uploadResponse = await upload({
@@ -77,9 +63,13 @@ const UploadExample = () => {
         abortSignal: abortControllerRef.current.signal,
       });
 
-      console.log("Upload success:", uploadResponse);
-      setSuccess("Upload successful!");
-      setProgress(0);
+      if (uploadResponse.url) {
+        onUploadComplete(uploadResponse.url);
+        setSuccess("Upload successful!");
+      } else {
+        throw new Error("No URL returned after upload.");
+      }
+
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -107,6 +97,7 @@ const UploadExample = () => {
 
   return (
     <div className="p-4 border rounded-xl shadow-sm space-y-3 w-full max-w-md">
+      <label className="block text-sm font-medium">{label}</label>
       <input type="file" ref={fileInputRef} className="w-full" />
       <div className="flex gap-2">
         <button
@@ -138,8 +129,8 @@ const UploadExample = () => {
         <progress
           value={progress}
           max={100}
-          className="w-full h-2 rounded bg-gray-200 [&::-webkit-progress-bar]:bg-gray-200 [&::-webkit-progress-value]:bg-blue-500"
-        ></progress>
+          className="w-full h-2 rounded bg-gray-200 [&::-webkit-progress-value]:bg-blue-500"
+        />
       )}
 
       {error && <div className="text-red-600 text-sm">{error}</div>}
@@ -148,4 +139,4 @@ const UploadExample = () => {
   );
 };
 
-export default UploadExample;
+export default FileUpload;

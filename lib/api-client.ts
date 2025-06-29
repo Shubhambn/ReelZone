@@ -30,9 +30,16 @@ class ApiClient{
         }
         return response.json()
     }
-
-    async getVideo(){
-        return this.fetch("/video")
-    }
+    //Get new Video
+  async getVideos() {
+    return this.fetch<IVideo[]>("/videos");
+  }
+    // 🔹 Create a new video
+  async createVideo(data: videoFormData) {
+    return this.fetch<IVideo>("/videos", {
+      method: "POST",
+      body: data,
+    });
+  }
 }
 export const apiClient=new ApiClient()

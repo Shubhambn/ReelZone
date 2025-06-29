@@ -6,12 +6,12 @@ export const Video_Dimension={
 } as const
 
 export interface IVideo{
-    _id?:mongoose.Types.ObjectId;
+    _id?:String;
     title:string;
     description:string;
     videoURL:string;
     thumbnailURL:string;
-    control?:boolean;
+    controls?:boolean;
     transformation:{
         height:number,
         width:number,
@@ -26,15 +26,16 @@ const VideoSchema=new Schema<IVideo>({
     description:{type:String,required:true},
     videoURL:{type:String,required:true},
     thumbnailURL:{type:String,required:true},
-    control:{type:Boolean,required:true},
+    controls:{type:Boolean,required:true},
     transformation:{
-        height:{type:Number,default:Video_Dimension.height},
+        height:{type:Number,default: Video_Dimension.height},
         width:{type:Number,default:Video_Dimension.width},
         quality:{type:Number,min:1,max:100}
     }
     
 },{timestamps:true})
 
-const Video = mongoose.models.VideoSchema||mongoose.model("User",VideoSchema)
+const Video = mongoose.models.Video || mongoose.model("Video", VideoSchema);
+
 
 export default Video

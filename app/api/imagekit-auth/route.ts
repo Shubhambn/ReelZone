@@ -8,7 +8,7 @@ export async function GET() {
     // If the user is not authenticated, you can return an error response
 
     const { token, expire, signature } = getUploadAuthParams({
-        privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string, // Never expose this on client side
+        privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string, 
         publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
     })
     try{
